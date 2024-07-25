@@ -3,11 +3,21 @@ import Answers from "./Answers.jsx";
 import QuestionTimer from "./QuestionTimer.jsx";
 import questions from "../assets/questions.js";
 
-const Question = ({ onSkipAnswer, key, onSelectAnswer, index }) => {
+const Question = ({ onSkipAnswer, onSelectAnswer, index }) => {
   const [answer, setAnswer] = useState({
     selectedAnswer: "",
     isCorrect: null,
   });
+
+  let timer = 10000;
+
+  if (answer.selectedAnswer) {
+    timer = 1000;
+  }
+
+  if (answer.isCorrect !== null) {
+    timer = 2000;
+  }
 
   const handleSelectAnswer = (answer) => {
     setAnswer({
@@ -37,7 +47,12 @@ const Question = ({ onSkipAnswer, key, onSelectAnswer, index }) => {
 
   return (
     <div id="question">
-      <QuestionTimer timeout={10000} onTimeout={onSkipAnswer} />
+      <QuestionTimer
+        key={timer}
+        timeout={timer}
+        onTimeout={answer.selectedAnswer === "" ? onSkipAnswer : null}
+        mode={answerState}
+      />
       <h2>{questions[index].text}</h2>
       <Answers
         answers={questions[index].answers}
